@@ -142,16 +142,66 @@ Nota: Definir diasNormales a partir de las otras dos, no volver a hacer las cuen
 
 -}
 
-data Parametros = Parametros {nivel :: (Integer,Integer,Integer)}
+data Parametros = Parametros {nivel :: (Int,Int,Int)}
 
-dispersion :: Parametros -> (Integer , String)
-dispersion Parametros ( x , y , z)  =  (diferenciaMaxMin Parametros , diasNormales Parametros)
+dispersion :: Parametros -> (Int , String)
+dispersion (Parametros (x , y , z))  =  (diferenciaMaxMin (Parametros (x ,y, z)) , diasNormales (Parametros (x ,y , z)))
 
-diferenciaMaxMin :: Parametros -> Integer
-diferenciaMaxMin Parametros  = max (max x y) z - min ( min x y) z
+diferenciaMaxMin :: Parametros -> Int
+diferenciaMaxMin (Parametros (x ,y ,z))  = max (max x y) z - min ( min x y) z
 
 diasNormales :: Parametros -> String
-diasNormales | (<30). diferenciaMaxMin Parametros = 
+diasNormales (Parametros(x,y,z))
+    |diferenciaMaxMin (Parametros (x,y,z)) > 30 = "a"
+    |diferenciaMaxMin (Parametros (x,y,z)) < 30 = "a"
+    |diferenciaMaxMin (Parametros (x,y,z)) > 100 = "a"
+
+--Punto 11
+
+{-
+En una plantación de pinos, de cada árbol se conoce la altura expresada en cm. El peso de un pino se puede calcular 
+a partir de la altura así: 3 kg x cm hasta 3 metros, 2 kg x cm arriba de los 3 metros. P.ej. 2 metros ⇒  600 kg, 5 metros ⇒  1300 kg. 
+Los pinos se usan para llevarlos a una fábrica de muebles, a la que le sirven árboles de entre 400 y 1000 kilos, un pino 
+fuera de este rango no le sirve a la fábrica. Para esta situación: 
+
+
+a) Definir la función pesoPino, recibe la altura de un pino y devuelve su peso. 
+
+b) Definir la función esPesoUtil, recibe un peso en kg y devuelve True si un pino de ese peso le sirve a la fábrica, y False en caso contrario. 
+
+c) Definir la función sirvePino, recibe la altura de un pino y devuelve True si un pino de ese peso le sirve a la fábrica, y False en caso contrario. Usar composición en la definición. 
+
+-}
+
+pesoPino :: Integer -> Integer
+pesoPino x | x <= 300 = div (x*3)  1
+           | otherwise = div (x*2) 1
+
+esPesoUtil :: Integer -> Bool
+esPesoUtil x = x > 400 && x < 1000
+
+sirvePino :: Integer -> Bool
+sirvePino x = pesoPino x > 400 && pesoPino x < 1000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
