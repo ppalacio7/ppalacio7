@@ -22,6 +22,7 @@ True
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Use newtype instead of data" #-}
 import Distribution.Simple.Setup (TestShowDetails)
+import System.Win32 (xBUTTON1)
 {-# HLINT ignore "Eta reduce" #-}
 
 esMultiploDeTres :: Integer -> Bool
@@ -204,6 +205,10 @@ Main> siguiente 3
 
 siguiente :: Integer -> Integer
 siguiente x = x + 1
+
+avanza = siguiente
+
+--Puedo hacer "igualdad" de una funcion a otra ya existente.
 
 --Punto 2
 
@@ -434,7 +439,7 @@ esNotaBochazo' :: Integer -> Bool
 esNotaBochazo' x = x > 6
 
 esNotaBochazo :: (Integer,Integer) -> Bool
-esNotaBochazo ( nota1 , nota2 ) = nota1 < 6 && nota2 < 6  
+esNotaBochazo ( nota1 , nota2 ) = nota1 < 6 && nota2 < 6
 
 aprobo :: (Integer,Integer) -> Bool
 aprobo ( nota1 , nota2 ) = not ( esNotaBochazo ( nota1 , nota2) )
@@ -460,7 +465,8 @@ esMayorDeEdad ( _ , y ) = y > 21
 --Punto 6
 
 {-
-Definir la función calcular, que recibe una tupla de 2 elementos, si el primer elemento es par lo duplica, sino lo deja 
+Definir la función calcular, que recibe una tupla de 2 elementos, si el primer elemento es par lo duplica, 
+sino lo deja 
 como está y con el segundo elemento en caso de ser impar le suma 1 y si no deja esté último como esta. 
 Main> calcular (4,5)
 (8,6) 
@@ -470,8 +476,78 @@ Nota: Resolverlo utilizando aplicación parcial y composición.
 -}
 
 calcular :: (Integer,Integer) -> (Integer,Integer)
-calcular ( x , y ) = 
+calcular ( x , y )  = (op ( even x ) x , op' ( odd y ) y )
 
+op :: Bool -> Integer -> Integer
+op b x | not b = x
+       | b = doble x
+
+op' :: Bool -> Integer -> Integer
+op' b y | not b = y
+        | b = y + 1
+
+{-
+Listas
+Existen funciones predefinidas en el Prelude que nos permiten manejar listas por 
+ej: head / tail / !! (infija, devuelve el elemento en la posición i, base 0). Ejemplos 
+head [2,4,6,8] = 2 
+tail [2,4,6,8] = [4,6,8] 
+[2,4,6,8] !! 1 = 4 	-- base 0!! 
+null [] = True 	--Indica si una lista está vacía. 
+null [2,4,5] = False 
+concat [[1..4],[11..13],[21,34]] = [1,2,3,4,11,12,13,21,34] -- ”aplana” una lista de listas. 
+
+Si se quiere calcular el promedio, dada una lista números y se está usando prelude puro, se puede hacer algo así: 
+> sum [3,5,6] / fromInteger(toInteger(length[3,5,6])) 
+4.66666666666667 
+Tener en cuenta que en la notación [a..b] ni a ni b tienen por qué ser constantes, pueden ser cualquier expresión, p.ej 
+[1..head [6,3,8]] 		[min (3+4) (3*4)..max (3+4) (3*4)] 
+-}
+
+--Punto 1
+
+{-
+ Definir una función que sume una lista de números. 
+ Nota: Investigar sum 
+-}
+
+
+suma :: Num a => [a] -> a
+suma xs = sum xs
+
+--Punto 2
+--Punto 3
+
+--Punto 4
+
+{-
+
+Se tiene información detallada de la duración en minutos de las llamadas que se llevaron a cabo en un período determinado, discriminadas 
+en horario normal y horario reducido. 
+
+duracionLlamadas = (("horarioReducido",[20,10,25,15]),(“horarioNormal”,[10,5,8,2,9,10])). 
+
+a) Definir la función cuandoHabloMasMinutos, devuelve en que horario se habló más cantidad de minutos, en el de tarifa normal o en 
+el reducido. 
+
+Main> cuandoHabloMasMinutos 
+“horarioReducido” 
+
+b) Definir la función cuandoHizoMasLlamadas, devuelve en que franja horaria realizó más cantidad de llamadas, en el de 
+tarifa normal o en el reducido. 
+
+Main> cuandoHizoMasLlamadas 
+“horarioNormal” 
+
+Nota: Utilizar composición en ambos casos 
+
+-}
+
+data DuracionLlamadas = DuracionLlamadas {etiqueta :: String , cantidadLlamada :: [Integer]}
+
+
+cuandoHabloMasMinutos :: DuracionLlamadas -> DuracionLlamadas -> Bool
+cuandoHabloMasMinutos (DuracionLlamadas _ cantidadLlamada) (DuracionLlamadas _ cantidadLlamada1)  = suma cantidadLlamada > suma cantidadLlamada1
 
 
 
